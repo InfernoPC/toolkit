@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工具包 Toolkit</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="app">
+  <header class="app-header">
+    <h1>🧰 工具包</h1>
+    <button id="theme-toggle" class="icon-btn" type="button" title="切換深色/淺色主題">🌓</button>
+  </header>
+
+  <div class="input-bar">
+    <div class="input-bar-row">
+      <textarea
+        id="shared-input"
+        rows="3"
+        spellcheck="false"
+        autocomplete="off"
+        placeholder="貼上任何文字、數字、時間戳記、顏色碼、JSON、JWT... 下方工具會自動判斷並即時處理"
+      ></textarea>
+      <div class="input-bar-tools" id="input-tools"></div>
+    </div>
+
+    <div class="calc-pad hidden" id="calc-pad">
+      <button type="button" class="calc-key calc-key-op" data-action="clear">C</button>
+      <button type="button" class="calc-key" data-insert="(">(</button>
+      <button type="button" class="calc-key" data-insert=")">)</button>
+      <button type="button" class="calc-key calc-key-op" data-action="backspace">⌫</button>
+
+      <button type="button" class="calc-key" data-insert="7">7</button>
+      <button type="button" class="calc-key" data-insert="8">8</button>
+      <button type="button" class="calc-key" data-insert="9">9</button>
+      <button type="button" class="calc-key calc-key-op" data-insert="/">÷</button>
+
+      <button type="button" class="calc-key" data-insert="4">4</button>
+      <button type="button" class="calc-key" data-insert="5">5</button>
+      <button type="button" class="calc-key" data-insert="6">6</button>
+      <button type="button" class="calc-key calc-key-op" data-insert="*">×</button>
+
+      <button type="button" class="calc-key" data-insert="1">1</button>
+      <button type="button" class="calc-key" data-insert="2">2</button>
+      <button type="button" class="calc-key" data-insert="3">3</button>
+      <button type="button" class="calc-key calc-key-op" data-insert="-">−</button>
+
+      <button type="button" class="calc-key calc-key-zero" data-insert="0">0</button>
+      <button type="button" class="calc-key" data-insert=".">.</button>
+      <button type="button" class="calc-key calc-key-op" data-insert="+">+</button>
+    </div>
+  </div>
+
+  <main>
+    <section class="tool-section">
+      <div class="section-title">
+        <h2>自動解析結果</h2>
+        <span class="section-hint">依信心度排序，最有可能符合輸入的工具排最前面</span>
+      </div>
+      <div class="card-grid" id="grid-input"></div>
+    </section>
+
+    <section class="tool-section">
+      <div class="section-title">
+        <h2>產生器</h2>
+        <span class="section-hint">不受上方輸入框影響，各自獨立產生</span>
+      </div>
+      <div class="card-grid" id="grid-generator"></div>
+    </section>
+  </main>
+
+  <footer class="app-footer">
+    <span>純前端處理，所有內容只留在瀏覽器中，不會送出到任何伺服器。</span>
+  </footer>
+</div>
+
+<script src="js/vendor/qrcode.js"></script>
+<script src="js/vendor/md5.js"></script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>
