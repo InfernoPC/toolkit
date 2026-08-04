@@ -13,8 +13,14 @@ import caseConvert from './tools/case-convert.js';
 import qrCode from './tools/qr-code.js';
 import imageBase64 from './tools/image-base64.js';
 import calculator from './tools/calculator.js';
+import textStats from './tools/text-stats.js';
+import cron from './tools/cron.js';
+import ipCidr from './tools/ip-cidr.js';
+import markdownPreview from './tools/markdown-preview.js';
 import passwordGenerator from './tools/password-generator.js';
 import uuidGenerator from './tools/uuid-generator.js';
+import loremIpsum from './tools/lorem-ipsum.js';
+import randomColor from './tools/random-color.js';
 
 const INPUT_TOOLS = [
   base64Encode,
@@ -32,10 +38,14 @@ const INPUT_TOOLS = [
   qrCode,
   imageBase64,
   calculator,
+  textStats,
+  cron,
+  ipCidr,
+  markdownPreview,
   passwordGenerator,
 ];
 
-const GENERATOR_TOOLS = [uuidGenerator];
+const GENERATOR_TOOLS = [uuidGenerator, loremIpsum, randomColor];
 
 const EMPTY_RESULT = { valid: false, confidence: 0, note: '尚未輸入內容', sections: [] };
 
@@ -96,6 +106,13 @@ function buildOutputRow(row) {
       linksWrap.appendChild(buildDownloadLink(d.value, d.filename));
     });
     r.appendChild(linksWrap);
+    return r;
+  }
+
+  if (row.type === 'html') {
+    const wrap = el('div', 'output-value markdown-preview');
+    wrap.innerHTML = row.value;
+    r.appendChild(wrap);
     return r;
   }
 
