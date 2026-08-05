@@ -151,14 +151,27 @@ function renderSections(container, result) {
   });
 }
 
+function confidenceHue(confidence) {
+  return Math.max(0, Math.min(1, confidence ?? 0)) * 130; // 0 = red, 130 = green
+}
+
 function renderResult(card, result) {
   card.lastResult = result;
   card.el.classList.toggle('invalid', !result.valid);
 
   if (card.badge) {
-    card.badge.textContent = result.valid
-      ? `${Math.round((result.confidence ?? 0) * 100)}%`
-      : '不符合';
+    if (result.valid) {
+      const hue = confidenceHue(result.confidence);
+      card.badge.textContent = `${Math.round((result.confidence ?? 0) * 100)}%`;
+      card.badge.style.color = `hsl(${hue}, 65%, 38%)`;
+      card.badge.style.borderColor = `hsl(${hue}, 65%, 45%)`;
+      card.badge.style.background = `hsla(${hue}, 65%, 50%, 0.16)`;
+    } else {
+      card.badge.textContent = '不符合';
+      card.badge.style.color = '';
+      card.badge.style.borderColor = '';
+      card.badge.style.background = '';
+    }
   }
 
   renderSections(card.body, result);
