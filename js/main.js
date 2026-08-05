@@ -4,6 +4,7 @@ import urlEncode from './tools/url-encode.js';
 import urlDecode from './tools/url-decode.js';
 import hash from './tools/hash.js';
 import jsonFormat from './tools/json-format.js';
+import jsonUnescape from './tools/json-unescape.js';
 import jwtDecode from './tools/jwt-decode.js';
 import unixTimestamp from './tools/unix-timestamp.js';
 import numberBase from './tools/number-base.js';
@@ -29,6 +30,7 @@ const INPUT_TOOLS = [
   urlDecode,
   hash,
   jsonFormat,
+  jsonUnescape,
   jwtDecode,
   unixTimestamp,
   numberBase,
@@ -133,7 +135,24 @@ function buildOutputRow(row) {
   return r;
 }
 
+function renderSections(container, result) {
+  container.innerHTML = '';
+
+  if (!result.valid) {
+    if (result.note) container.appendChild(el('div', 'invalid-note', result.note));
+    return;
+  }
+
+  (result.sections || []).forEach((section) => {
+    const wrap = el('div', 'subgroup');
+    if (section.label) wrap.appendChild(el('div', 'subgroup-label', section.label));
+    (section.rows || []).forEach((row) => wrap.appendChild(buildOutputRow(row)));
+    container.appendChild(wrap);
+  });
+}
+
 function renderResult(card, result) {
+  card.lastResult = result;
   card.el.classList.toggle('invalid', !result.valid);
 
   if (card.badge) {
@@ -142,19 +161,11 @@ function renderResult(card, result) {
       : '不符合';
   }
 
-  card.body.innerHTML = '';
+  renderSections(card.body, result);
 
-  if (!result.valid) {
-    if (result.note) card.body.appendChild(el('div', 'invalid-note', result.note));
-    return;
+  if (expandedCard === card) {
+    renderSections(expandBody, result);
   }
-
-  (result.sections || []).forEach((section) => {
-    const wrap = el('div', 'subgroup');
-    if (section.label) wrap.appendChild(el('div', 'subgroup-label', section.label));
-    (section.rows || []).forEach((row) => wrap.appendChild(buildOutputRow(row)));
-    card.body.appendChild(wrap);
-  });
 }
 
 function buildCardShell(tool, { withBadge }) {
@@ -164,24 +175,37 @@ function buildCardShell(tool, { withBadge }) {
   const titleRow = el('div', 'card-title-row');
   titleRow.appendChild(el('span', 'card-title', tool.title));
 
+  const actions = el('div', 'card-actions');
+  titleRow.appendChild(actions);
+
   let badge = null;
   if (withBadge) {
     badge = el('span', 'confidence-badge');
-    titleRow.appendChild(badge);
+    actions.appendChild(badge);
   }
 
   const body = el('div', 'card-body');
   cardEl.appendChild(titleRow);
   cardEl.appendChild(body);
 
-  return { el: cardEl, titleRow, body, badge };
+  const card = { el: cardEl, titleRow, actions, body, badge, lastResult: null };
+
+  const expandBtn = el('button', 'expand-btn', '🔍');
+  expandBtn.type = 'button';
+  expandBtn.title = '放大檢視';
+  expandBtn.addEventListener('click', () => {
+    if (card.lastResult) openExpand(card, tool.title);
+  });
+  actions.appendChild(expandBtn);
+
+  return card;
 }
 
 function addTitleButton(card, className, label, onClick) {
   const btn = el('button', className, label);
   btn.type = 'button';
   btn.addEventListener('click', onClick);
-  card.titleRow.appendChild(btn);
+  card.actions.appendChild(btn);
   return btn;
 }
 
@@ -194,6 +218,34 @@ function safeCompute(tool, raw) {
 }
 
 let lastRaw = '';
+
+// Expand-to-lightbox overlay, shared by every card. Its z-index stays below the
+// sticky input bar's, so the input box always stays visible/usable on top of it.
+const expandOverlay = document.getElementById('expand-overlay');
+const expandTitle = document.getElementById('expand-title');
+const expandBody = document.getElementById('expand-body');
+const expandCloseBtn = document.getElementById('expand-close');
+let expandedCard = null;
+
+function openExpand(card, title) {
+  expandedCard = card;
+  expandTitle.textContent = title;
+  renderSections(expandBody, card.lastResult);
+  expandOverlay.classList.remove('hidden');
+}
+
+function closeExpand() {
+  expandedCard = null;
+  expandOverlay.classList.add('hidden');
+}
+
+expandCloseBtn.addEventListener('click', closeExpand);
+expandOverlay.addEventListener('click', (e) => {
+  if (e.target === expandOverlay) closeExpand();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !expandOverlay.classList.contains('hidden')) closeExpand();
+});
 
 const inputCards = new Map();
 INPUT_TOOLS.forEach((tool) => {

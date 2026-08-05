@@ -73,6 +73,14 @@
   <footer class="app-footer">
     <span>純前端處理，所有內容只留在瀏覽器中，不會送出到任何伺服器。</span>
   </footer>
+
+  <div class="overlay-backdrop hidden" id="expand-overlay">
+    <div class="overlay-panel">
+      <button type="button" class="overlay-close-btn" id="expand-close" title="關閉">✕</button>
+      <div class="overlay-title" id="expand-title"></div>
+      <div class="card-body" id="expand-body"></div>
+    </div>
+  </div>
 </div>
 
 <script src="js/vendor/qrcode.js"></script>
