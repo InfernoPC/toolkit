@@ -75,6 +75,12 @@ body {
   margin: 0;
 }
 
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
 .icon-btn {
   background: var(--bg-elevated);
   border: 1px solid var(--border);
@@ -343,6 +349,23 @@ body {
   max-height: none;
 }
 
+/* Unlike the expand overlay, this one doesn't need the input box visible
+   on top of it, so it sits above the sticky input bar instead of below it
+   — otherwise its title/hint get clipped under the input bar. */
+#examples-overlay {
+  z-index: 20;
+}
+
+.examples-panel {
+  max-height: 60vh;
+}
+
+.examples-hint {
+  display: block;
+  margin-top: -0.4rem;
+  margin-bottom: 0.2rem;
+}
+
 .invalid-note {
   font-size: 0.78rem;
   color: var(--text-muted);
@@ -555,6 +578,45 @@ body {
   font-weight: 600;
   color: var(--text-muted);
   margin-bottom: 0.3rem;
+}
+
+.examples-list {
+  margin-top: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.examples-group-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+}
+
+.examples-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.example-chip {
+  background: var(--code-bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.3rem 0.55rem;
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 0.78rem;
+  color: var(--text);
+  cursor: pointer;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.example-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 .app-footer {

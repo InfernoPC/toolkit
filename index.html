@@ -10,7 +10,10 @@
 <div class="app">
   <header class="app-header">
     <h1>🧰 工具包</h1>
-    <button id="theme-toggle" class="icon-btn" type="button" title="切換深色/淺色主題">🌓</button>
+    <div class="header-actions">
+      <button id="examples-toggle" class="icon-btn" type="button" title="輸入範例">💡</button>
+      <button id="theme-toggle" class="icon-btn" type="button" title="切換深色/淺色主題">🌓</button>
+    </div>
   </header>
 
   <div class="input-bar">
@@ -79,6 +82,15 @@
       <button type="button" class="overlay-close-btn" id="expand-close" title="關閉">✕</button>
       <div class="overlay-title" id="expand-title"></div>
       <div class="card-body" id="expand-body"></div>
+    </div>
+  </div>
+
+  <div class="overlay-backdrop hidden" id="examples-overlay">
+    <div class="overlay-panel examples-panel">
+      <button type="button" class="overlay-close-btn" id="examples-close" title="關閉">✕</button>
+      <div class="overlay-title">輸入範例</div>
+      <div class="section-hint examples-hint">點擊任一範例即可帶入上方輸入框</div>
+      <div class="examples-list" id="examples-list"></div>
     </div>
   </div>
 </div>

@@ -23,6 +23,7 @@ import uuidGenerator from './tools/uuid-generator.js';
 import loremIpsum from './tools/lorem-ipsum.js';
 import randomColor from './tools/random-color.js';
 import currencyConvert from './tools/currency-convert.js';
+import EXAMPLES from './examples.js';
 
 const INPUT_TOOLS = [
   base64Encode,
@@ -260,6 +261,53 @@ expandOverlay.addEventListener('click', (e) => {
 });
 document.addEventListener('keydown', (e) => {
   if (e.key === 'Escape' && !expandOverlay.classList.contains('hidden')) closeExpand();
+});
+
+// Input examples overlay
+const examplesToggle = document.getElementById('examples-toggle');
+const examplesOverlay = document.getElementById('examples-overlay');
+const examplesClose = document.getElementById('examples-close');
+const examplesList = document.getElementById('examples-list');
+
+function openExamples() {
+  examplesList.innerHTML = '';
+  INPUT_TOOLS.forEach((tool) => {
+    const samples = EXAMPLES[tool.id];
+    if (!samples || samples.length === 0) return;
+
+    const group = el('div', 'examples-group');
+    group.appendChild(el('div', 'examples-group-title', tool.title));
+
+    const chips = el('div', 'examples-chips');
+    samples.forEach((sample) => {
+      const chip = el('button', 'example-chip', sample);
+      chip.type = 'button';
+      chip.title = sample;
+      chip.addEventListener('click', () => {
+        sharedInput.value = sample;
+        closeExamples();
+        sharedInput.focus();
+        updateAll();
+      });
+      chips.appendChild(chip);
+    });
+    group.appendChild(chips);
+    examplesList.appendChild(group);
+  });
+  examplesOverlay.classList.remove('hidden');
+}
+
+function closeExamples() {
+  examplesOverlay.classList.add('hidden');
+}
+
+examplesToggle.addEventListener('click', openExamples);
+examplesClose.addEventListener('click', closeExamples);
+examplesOverlay.addEventListener('click', (e) => {
+  if (e.target === examplesOverlay) closeExamples();
+});
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape' && !examplesOverlay.classList.contains('hidden')) closeExamples();
 });
 
 const inputCards = new Map();
