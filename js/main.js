@@ -22,6 +22,7 @@ import passwordGenerator from './tools/password-generator.js';
 import uuidGenerator from './tools/uuid-generator.js';
 import loremIpsum from './tools/lorem-ipsum.js';
 import randomColor from './tools/random-color.js';
+import currencyConvert from './tools/currency-convert.js';
 
 const INPUT_TOOLS = [
   base64Encode,
@@ -45,6 +46,7 @@ const INPUT_TOOLS = [
   ipCidr,
   markdownPreview,
   passwordGenerator,
+  currencyConvert,
 ];
 
 const GENERATOR_TOOLS = [uuidGenerator, loremIpsum, randomColor];
